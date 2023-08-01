@@ -36,8 +36,21 @@ export class HomeComponent {
   filteredLocationList: HousingLocation[] = [];
 
   constructor() {
-    this.housingLocationList = this.housingService.getAllHousingLocations();
-    this.filteredLocationList = this.housingLocationList;
+    this.housingService
+      .getAllHousingLocations()
+      .then((housingLocationList: HousingLocation[]) => {
+        housingLocationList = housingLocationList.map((housingLocation) => {
+          if (housingLocation) {
+            housingLocation.photo = housingLocation.photo.replace(
+              '/assets',
+              this.housingService.imgBaseUrl
+            );
+          }
+          return housingLocation;
+        });
+        this.housingLocationList = housingLocationList;
+        this.filteredLocationList = housingLocationList;
+      });
   }
 
   filterResults(text: string) {
